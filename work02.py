@@ -6,6 +6,10 @@
 # zip関数を使う
 # https://qiita.com/Ryusei-KAKUBARI/items/b3ab63c2208b654352b9
 
+import utility.print_method_result as util
+
+
+@util.print_result
 def zip_pair(left_target_str='', right_target_str=''):
     zip_str = ''
 
@@ -13,6 +17,6 @@ def zip_pair(left_target_str='', right_target_str=''):
         zip_str += (left + right)
     return zip_str
 
+
 if __name__ == '__main__':
-    result = zip_pair('パトカー', 'タクシー')
-    print(result)
+    zip_pair('パトカー', 'タクシー')
