@@ -8,7 +8,7 @@ import utility.extract as ext
 
 
 @util.print_result
-def extract_category(target_json='', target_content=''):
+def extract_category_line(target_json='', target_content=''):
     repatter = re.compile(r'''
         ^   # 行頭
         (   # キャプチャ対象のグループ開始
@@ -22,8 +22,8 @@ def extract_category(target_json='', target_content=''):
         ''', re.MULTILINE + re.VERBOSE)
     json_contents = ext.extract_content(target_json, target_content)
     extracted = repatter.findall(json_contents[0])
-    return 0
+    return extracted
 
 
 if __name__ == '__main__':
-    extract_category('./data/jawiki-country.json.gz', 'イギリス')
+    extract_category_line('./data/jawiki-country.json.gz', 'イギリス')
