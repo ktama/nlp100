@@ -41,5 +41,31 @@ def extract_template(target_json='', target_content=''):
     return dic
 
 
+def remove_markup_emphasis(target_dictionary={}):
+    repatter = re.compile(r'''
+        \'{2,5} # 2～5個の'
+        ''', re.MULTILINE + re.VERBOSE)
+    extracted = {}
+    for k, v in target_dictionary.items():
+        extracted[k] = repatter.sub('', v)
+    return extracted
+
+
+def remove_markup_internal_link(target_dictionary={}):
+    repatter = re.compile(r'''
+        \[\[        # '[['（マークアップの開始）
+        (?:         # キャプチャ対象外のグループ開始
+            [^|]*?  # '|'以外の文字が0文字以上、非貪欲
+            \|      # '|'
+        )??         # グループ終了、このグループが0か1出現、非貪欲
+        ([^|]*?)    # キャプチャ対象、'|'以外が0文字以上、非貪欲（表示対象の文字列）
+        \]\]        # ']]'（マークアップの終了）
+        ''', re.MULTILINE + re.VERBOSE)
+    extracted = {}
+    for k, v in target_dictionary.items():
+        extracted[k] = repatter.sub('', v)
+    return extracted
+
+
 if __name__ == '__main__':
     extract_content('./data/jawiki-country.json.gz', 'イギリス')

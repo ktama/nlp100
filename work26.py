@@ -11,16 +11,11 @@ import utility.extract as ext
 
 
 @util.print_result
-def extract_remove_markup(target_json='', target_content=''):
+def extract_remove_markup_emphasis(target_json='', target_content=''):
     extracted1 = ext.extract_template(target_json, target_content)
-    repatter = re.compile(r'''
-        \'{2,5} # 2～5個の'
-        ''', re.MULTILINE + re.VERBOSE)
-    extracted2 = {}
-    for k, v in extracted1.items():
-        extracted2[k] = repatter.sub('', v)
+    extracted2 = ext.remove_markup_emphasis(extracted1)
     return extracted2
 
 
 if __name__ == '__main__':
-    extract_remove_markup('./data/jawiki-country.json.gz', 'イギリス')
+    extract_remove_markup_emphasis('./data/jawiki-country.json.gz', 'イギリス')
