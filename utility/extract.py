@@ -43,11 +43,13 @@ def extract_template(target_json='', target_content=''):
 
 def remove_markup_emphasis(target_dictionary={}):
     repatter = re.compile(r'''
-        \'{2,5} # 2～5個の'
+        (\'{2,5}) # 2～5個の'
+        (.*?)
+        (\1)
         ''', re.MULTILINE + re.VERBOSE)
     extracted = {}
     for k, v in target_dictionary.items():
-        extracted[k] = repatter.sub('', v)
+        extracted[k] = repatter.sub(r'\2', v)
     return extracted
 
 
@@ -57,14 +59,72 @@ def remove_markup_internal_link(target_dictionary={}):
         (?:         # キャプチャ対象外のグループ開始
             [^|]*?  # '|'以外の文字が0文字以上、非貪欲
             \|      # '|'
-        )??         # グループ終了、このグループが0か1出現、非貪欲
+        )*?         # グループ終了、このグループが0か1出現、非貪欲
         ([^|]*?)    # キャプチャ対象、'|'以外が0文字以上、非貪欲（表示対象の文字列）
         \]\]        # ']]'（マークアップの終了）
         ''', re.MULTILINE + re.VERBOSE)
     extracted = {}
     for k, v in target_dictionary.items():
-        extracted[k] = repatter.sub('', v)
+        extracted[k] = repatter.sub(r'\1', v)
     return extracted
+
+
+def remove_markup_mediawiki(target_dictionary={}):
+    # 内部リンク、ファイルの除去
+    repatter1 = re.compile(r'''
+        \[\[        # '[['（マークアップの開始）
+        (?:         # キャプチャ対象外のグループ開始
+            [^|]*?  # '|'以外の文字が0文字以上、非貪欲
+            \|      # '|'
+        )*?         # グループ終了、このグループが0か1出現、非貪欲
+        ([^|]*?)    # キャプチャ対象、'|'以外が0文字以上、非貪欲（表示対象の文字列）
+        \]\]        # ']]'（マークアップの終了）
+        ''', re.MULTILINE + re.VERBOSE)
+    extracted1 = {}
+    for k, v in target_dictionary.items():
+        extracted1[k] = repatter1.sub(r'\1', v)
+
+    # Template:Langの除去        {{lang|言語タグ|文字列}}
+    repatter2 = re.compile(r'''
+        \{\{lang    # '{{lang'（マークアップの開始）
+        (?:         # キャプチャ対象外のグループ開始
+            [^|]*?  # '|'以外の文字が0文字以上、非貪欲
+            \|      # '|'
+        )*?         # グループ終了、このグループが0以上出現、非貪欲
+        ([^|]*?)    # キャプチャ対象、'|'以外が0文字以上、非貪欲（表示対象の文字列）
+        \}\}        # '}}'（マークアップの終了）
+        ''', re.MULTILINE + re.VERBOSE)
+    extracted2 = {}
+    for k, v in extracted1.items():
+        extracted2[k] = repatter2.sub(r'\1', v)
+
+    # 外部リンクの除去  [http://xxxx] 、[http://xxx xxx]
+    repatter3 = re.compile(r'''
+        \[http:\/\/ # '[http://'（マークアップの開始）
+        (?:         # キャプチャ対象外のグループ開始
+            [^\s]*? # 空白以外の文字が0文字以上、非貪欲
+            \s      # 空白
+        )?          # グループ終了、このグループが0か1出現
+        ([^]]*?)    # キャプチャ対象、']'以外が0文字以上、非貪欲（表示対象の文字列）
+        \]          # ']'（マークアップの終了）
+        ''', re.MULTILINE + re.VERBOSE)
+    extracted3 = {}
+    for k, v in extracted2.items():
+        extracted3[k] = repatter3.sub(r'\1', v)
+
+    # <br>、<ref>の除去
+    repatter4 = re.compile(r'''
+        <           # '<'（マークアップの開始）
+        \/?         # '/'が0か1出現（終了タグの場合は/がある）
+        [br|ref]    # 'br'か'ref'
+        [^>]*?      # '>'以外が0文字以上、非貪欲
+        >           # '>'（マークアップの終了）
+        ''', re.MULTILINE + re.VERBOSE)
+    extracted4 = {}
+    for k, v in extracted3.items():
+        extracted4[k] = repatter4.sub('', v)
+
+    return extracted4
 
 
 if __name__ == '__main__':

@@ -1,5 +1,4 @@
 # -*- Coding: utf-8 -*-
-import re
 import utility.print_method_result as util
 import utility.extract as ext
 
