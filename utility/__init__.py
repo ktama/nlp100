@@ -3,3 +3,4 @@
 
 from utility.print_method_result import print_result
 from utility.extract import extract_content
+from utility.parser import parse_morpheme
