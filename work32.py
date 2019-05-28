@@ -2,8 +2,8 @@
 import utility.print_method_result as util
 import utility.parser as parser
 
-# 31. 動詞
-# 動詞の表層形をすべて抽出せよ．
+# 32. 動詞の原形
+# 動詞の原形をすべて抽出せよ．
 
 
 @util.print_result
