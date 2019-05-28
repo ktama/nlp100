@@ -38,15 +38,14 @@ def read_morpheme(target_file=''):
         morphems.append(morphem)
 
         if parsed_commas[1] == '句点':
-            print(parsed_commas[1])
             yield morphems
             morphems = []
 
 
 if __name__ == '__main__':
-    morphems = read_morpheme('./data/neko.txt.mecab')
+    lines = read_morpheme('./data/neko.txt.mecab')
     try:
-        for morphem in morphems:
+        for line in lines:
             print(morphem)
     except:
         pass
