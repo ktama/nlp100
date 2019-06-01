@@ -17,7 +17,7 @@ def extract_original_verb(target_file=''):
                     verbs.append(morpheme['base'])
     except:
         pass
-    return verbs
+    return set(verbs)
 
 
 if __name__ == '__main__':

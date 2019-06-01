@@ -19,7 +19,7 @@ def extract_noum_phrase(target_file=''):
                             line[i-1]['surface']+line[i]['surface']+line[i+1]['surface'])
     except:
         pass
-    return noun_phrases
+    return set(noun_phrases)
 
 
 if __name__ == '__main__':

@@ -17,7 +17,7 @@ def extract_sa_line(target_file=''):
                     noun.append(morpheme['base'])
     except:
         pass
-    return noun
+    return set(noun)
 
 
 if __name__ == '__main__':
