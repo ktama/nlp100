@@ -1,6 +1,7 @@
 # -*- Coding: utf-8 -*-
 
 import MeCab
+from collections import Counter
 
 
 def parse_morpheme(target_file='', parsed_file=''):
@@ -34,6 +35,17 @@ def read_morpheme(target_file=''):
         if parsed_commas[1] == '句点':
             yield morphems
             morphems = []
+
+
+def extract_word_count(target_file=''):
+    lines = read_morpheme(target_file)
+    word_counter = Counter()
+    try:
+        for line in lines:
+            word_counter.update([morpheme['surface'] for morpheme in line])
+    except:
+        pass
+    return word_counter.most_common()
 
 
 if __name__ == '__main__':
