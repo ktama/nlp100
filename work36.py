@@ -8,7 +8,7 @@ import utility.parser as parser
 
 
 @util.print_result
-def extract_verb(target_file=''):
+def extract_word_count(target_file=''):
     lines = parser.read_morpheme(target_file)
     word_counter = Counter()
     try:
@@ -20,4 +20,4 @@ def extract_verb(target_file=''):
 
 
 if __name__ == '__main__':
-    extract_verb('./data/neko.txt.mecab')
+    extract_word_count('./data/neko.txt.mecab')
