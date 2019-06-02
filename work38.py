@@ -14,7 +14,7 @@ import utility.parser as parser
 @util.print_result
 def plot_word_count_histogram(target_file=''):
     word_count_list = parser.extract_word_count(target_file)
-    words, counts = list(zip(*word_count_list))
+    counts = list(zip(*word_count_list))[1]
     font = FontProperties(fname='C:/Windows/Fonts/HackGen-Regular_0.ttf')
     pyplot.hist(counts, bins=50, range=(1, 50))
     pyplot.xlim(xmin=1, xmax=50)
